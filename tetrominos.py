@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #cada tetrominó é uma matriz 4x4 em que 0's significam posição vazia e 1's representam o desenho da peça
 
 #tetrominó A: AAAA
@@ -82,12 +84,13 @@ def tetromino(tipo_tetromino):
                     j+=1
 
                 i+=1
+                j=0
 
             return tetromino
 
 #responsável por rotacionar os tetrominos
 def rotaciona(tetromino,rotacao):
-    
+
     #pega os angulos congruos das rotações, sendo que
     #resto == 0 -> 0º
     #resto == 1 -> 90º
@@ -99,38 +102,48 @@ def rotaciona(tetromino,rotacao):
         #rotacoes congruas a 0º equivalem a não rotacionar o tetromino
         return tetromino
 
-    elif resto == 1:
-        coef_linha = -4
-        coef_coluna = 1
+
+    auxiliar = [[0 for linha in range(4)] for coluna in range(4)]
+
+    for i in range(4):
+        for j in range(4):
+            auxiliar[i][j]=tetromino[i][j]
+
+
+    if resto == 1:
+        coef_linha = 1
+        coef_coluna = -4
         coef_linear = 12
 
     elif resto == 2:
-        coef_linha = -1
-        coef_coluna = -4
+        coef_linha = -4
+        coef_coluna = -1
         coef_linear = 15
 
     elif resto == 3:
-        coef_linha = 4
-        coef_coluna = -1
+        coef_linha = -1
+        coef_coluna = 4
         coef_linear = 3
 
 
     for linha in range(4):
         for coluna in range(4):
-            nova_posicao = coluna*coef_coluna - coef_linha*linha + coef_linear
+            nova_posicao = coluna*coef_coluna + coef_linha*linha + coef_linear
 
-            resto = nova_posicao % 4
-            if resto<4:
-                nova_linha = 0
-            elif resto<8:
-                nova_linha = 1
-            elif resto<12:
-                nova_linha = 2
+            if nova_posicao < 4:
+                antiga_linha = 0
+
+            elif nova_posicao < 8:
+                antiga_linha = 1
+
+            elif nova_posicao < 12:
+                antiga_linha = 2
+
             else:
-                nova_linha = 3
+                antiga_linha = 3
 
-            nova_coluna = resto
+            antiga_coluna = nova_posicao % 4
 
-            tetromino[linha][coluna] = tetris[nova_linha][nova_coluna]
+            tetromino[linha][coluna] = auxiliar[antiga_linha][antiga_coluna]
 
     return tetromino
