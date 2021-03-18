@@ -22,7 +22,7 @@ class Tabuleiro:
     def verifica_linhas_completas(self):
         linha = 16
 
-        while linha > -1:
+        while linha > 0:
             linha_completa = True
             coluna = 1
 
