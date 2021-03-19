@@ -40,9 +40,10 @@ class Tabuleiro:
     def consome_tetrominos(self,linha):
 
         i = linha
-        while (i > 0):
+        while i > -1:
             for coluna in range(1,11):
-                self.matriz[i][coluna] = self.matriz[i-1][coluna]
+                if i > 0:
+                    self.matriz[i][coluna] = self.matriz[i-1][coluna]
+                else:
+                    self.matriz[i][coluna] = 0
             i -= 1
-
-print(Tabuleiro().matriz)
