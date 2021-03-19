@@ -7,9 +7,15 @@ class Verificador:
     def __init__(self):
         pass
 
-    def tetramino_pode_rotacionar(self,tabuleiro,tetramino,rotacao):
-        tetramino_rotacionado = copy.deepcopy(tetramino)
-        tetramino_rotacionado.rotaciona(rotacao)
+    def cabe_tetramino(self,tabuleiro,tetramino,direcao):
+
+        tetramino_movido = copy.deepcopy(tetramino)
+        if direcao == "ROTACAO":
+            tetramino_movido.rotaciona()
+        else:
+            tetramino_movido.move(direcao)
+            if tetramino_movido.coluna = 0 or tetramino_movido.coluna == len(tabuleiro.matriz) - 1:
+                return False
 
         linha_inicio = tetramino_rotacionado.linha
         coluna_inicio = tetramino_rotacionado.coluna
@@ -18,21 +24,6 @@ class Verificador:
             for coluna in range( coluna_inicio,  len(tetramino_rotacionado.matriz[0])):
 
                 if tabuleiro.matriz[linha][coluna] and tetramino_rotacionado.matriz[linha][coluna]:
-                    return False
-
-        return True
-
-    def cabe_tetramino(self,tabuleiro,tetramino,direcao):
-
-        tetramino_movido = copy.deepcopy(tetramino)
-        tetramino_movido.move(direcao)
-
-        if tetramino_movido.coluna = 0 or tetramino_movido.coluna == len(tabuleiro.matriz) - 1:
-            return False
-
-        for linha in range( tetramino_movido.linha, len(tetramino_movido.matriz) ):
-            for coluna in range( tetramino_movido.coluna, len(tetramino_movido.matriz[0]) ):
-                if tabuleiro.matriz[linha][coluna] and tetramino_movido.matriz[linha][coluna]:
                     return False
 
         return True

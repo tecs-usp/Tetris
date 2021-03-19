@@ -93,45 +93,16 @@ class Tetromino:
 
 
     #responsável por rotacionar os tetrominos
-    def rotaciona(self,rotacao):
-
-        #pega os angulos congruos das rotações, sendo que
-        #resto == 0 -> 0º
-        #resto == 1 -> 90º
-        #resto == 2 -> 180º
-        #resto == 3 -> 270º
-        resto = rotacao%4
-
-        if resto == 0:
-            #rotacoes congruas a 0º equivalem a não rotacionar o tetromino
-            return
-
-
+    def rotaciona(self):
         auxiliar = [[0 for linha in range(4)] for coluna in range(4)]
 
         for i in range(4):
             for j in range(4):
                 auxiliar[i][j]=self.matriz[i][j]
 
-        if resto == 1:
-            coef_linha = 1
-            coef_coluna = -4
-            coef_linear = 12
-
-        elif resto == 2:
-            coef_linha = -4
-            coef_coluna = -1
-            coef_linear = 15
-
-        elif resto == 3:
-            coef_linha = -1
-            coef_coluna = 4
-            coef_linear = 3
-
-
         for linha in range(4):
             for coluna in range(4):
-                nova_posicao = coluna*coef_coluna + coef_linha*linha + coef_linear
+                nova_posicao = -4*coluna + linha + 12
 
                 if nova_posicao < 4:
                     antiga_linha = 0
