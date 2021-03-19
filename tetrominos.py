@@ -26,7 +26,9 @@ class Tetromino:
 
         self.matriz = [[0 for coluna in range(4)] for linha in range(4)]
         self.linha = 0
+        self.estado = 0
         self.coluna = 1
+        self.tipo = tipo
 
         if tipo == 'A':
             i=3
@@ -94,6 +96,9 @@ class Tetromino:
 
     #responsável por rotacionar os tetrominos
     def rotaciona(self):
+
+        self.estado += 1
+        self.estado = self.estado % 4
         auxiliar = [[0 for linha in range(4)] for coluna in range(4)]
 
         for i in range(4):

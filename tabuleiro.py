@@ -2,6 +2,7 @@
 #o tabuleiro é uma matriz de 12X18 em que 0 representa um espaço livre, 1 representa um espaço com
 #pedaços de tetrominos e -1 representa as bordas do tabuleiro
 
+from tetrominos import Tetromino
 
 class Tabuleiro:
 
@@ -47,3 +48,31 @@ class Tabuleiro:
                 else:
                     self.matriz[i][coluna] = 0
             i -= 1
+
+    def puxa_tetramino(self,tetramino):
+        linha = tetramino.linha + 4
+        coluna = tetramino.coluna
+
+        i = linha
+        while i >= tetramino.linha:
+            for j in range(4):
+                if i > 0 and tabuleiro.matriz[i-1][coluna] != 2 :
+                    copia = tabuleiro.matriz[i-1][coluna]
+                    tabuleiro.matriz[i][coluna] = copia
+                else:
+                    tabuleiro.matriz[i][coluna] = 0
+                coluna += 1
+
+            i -= 1
+
+    def encaixa_tetramino(self,tetramino):
+        linha = tetramino.linha
+        coluna = tetramino.coluna
+
+        for i in range(4):
+            for j in range(4):
+                pedaco = tetramino.matriz[i][j]
+                if pedaco == 1:
+                    tabuleiro.matriz[linha][coluna] = 2
+                coluna += 1
+            linha += 1

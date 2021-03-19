@@ -12,18 +12,27 @@ class Verificador:
         tetramino_movido = copy.deepcopy(tetramino)
         if direcao == "ROTACAO":
             tetramino_movido.rotaciona()
-        else:
+        elif direcao == "DIREITA" or direcao == "ESQUERDA":
             tetramino_movido.move(direcao)
             if tetramino_movido.coluna = 0 or tetramino_movido.coluna == len(tabuleiro.matriz) - 1:
                 return False
+        else:
+            tetramino_movido.move(direcao)
+            if tetramino_movido.linha == len(tabuleiro.matriz) - 4:
+                return False
 
-        linha_inicio = tetramino_rotacionado.linha
-        coluna_inicio = tetramino_rotacionado.coluna
+        linha_inicio = tetramino_movido.linha
+        coluna_inicio = tetramino_movido.coluna
+        i=0
+        j=0
 
-        for linha in range( linha_inicio, len(tetramino_rotacionado.matriz) ):
-            for coluna in range( coluna_inicio,  len(tetramino_rotacionado.matriz[0])):
+        for linha in range( linha_inicio, len(tetramino_movido.matriz) ):
+            for coluna in range( coluna_inicio,  len(tetramino_movido.matriz[0])):
 
-                if tabuleiro.matriz[linha][coluna] and tetramino_rotacionado.matriz[linha][coluna]:
+                if (tabuleiro.matriz[linha][coluna] == 2) and tetramino_movido.matriz[i][j]:
                     return False
+                j += 1
+
+            i += 1
 
         return True
