@@ -25,6 +25,8 @@ class Tetromino:
     def __init__(self,tipo):
 
         self.matriz = [[0 for coluna in range(4)] for linha in range(4)]
+        self.linha = 0
+        self.coluna = 1
 
         if tipo == 'A':
             i=3
@@ -80,6 +82,15 @@ class Tetromino:
 
                     i+=1
                     j=0
+
+    def move(self,direcao):
+        if direcao == "BAIXO":
+            self.linha += 1
+        elif direcao == "DIREITA":
+            self.coluna += 1
+        elif direcao =="ESQUERDA":
+            self.coluna -=1
+
 
     #responsável por rotacionar os tetrominos
     def rotaciona(self,rotacao):

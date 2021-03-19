@@ -22,10 +22,13 @@ class Verificador:
 
         return True
 
-    def cabe_tetramino(self,tabuleiro,tetramino,movimento):
+    def cabe_tetramino(self,tabuleiro,tetramino,direcao):
 
         tetramino_movido = copy.deepcopy(tetramino)
-        tetramino_movido.empurra(movimento)
+        tetramino_movido.move(direcao)
+
+        if tetramino_movido.coluna = 0 or tetramino_movido.coluna == len(tabuleiro.matriz) - 1:
+            return False
 
         for linha in range( tetramino_movido.linha, len(tetramino_movido.matriz) ):
             for coluna in range( tetramino_movido.coluna, len(tetramino_movido.matriz[0]) ):
