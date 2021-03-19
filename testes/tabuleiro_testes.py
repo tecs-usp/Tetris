@@ -6,11 +6,9 @@ sys.path.append(diretorio_pai)
 
 from tabuleiro import Tabuleiro
 
-@pytest.fixture
 def tabuleiro_vazio():
     return Tabuleiro()
 
-@pytest.fixture
 def tabuleiro_lotado():
     tabuleiro = Tabuleiro()
 
@@ -20,8 +18,7 @@ def tabuleiro_lotado():
 
     return tabuleiro
 
-@pytest.fixture
-def tabuleiro_intercalado():
+def tabuleiro_linhas_intercaladas():
     tabuleiro = Tabuleiro()
 
     for linha in range( 1, len(tabuleiro.matriz) - 1, 2):
@@ -30,7 +27,6 @@ def tabuleiro_intercalado():
 
     return tabuleiro
 
-@pytest.fixture
 def tabuleiro_quase_cheio():
     tabuleiro = Tabuleiro()
 
@@ -41,8 +37,7 @@ def tabuleiro_quase_cheio():
 
     return tabuleiro
 
-
-tabuleiro_zerado = [ [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+tabuleiro_zerado = [[-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
                     [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
                     [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
                     [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
@@ -61,16 +56,54 @@ tabuleiro_zerado = [ [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
                     [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
                     [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1] ]
 
-def teste_todos_os_tabuleiros_devem_ficar_vazios(tabuleiro_vazio,tabuleiro_lotado,tabuleiro_intercalado,tabuleiro_quase_cheio):
-    print(tabuleiro_vazio)
+tabuleiros_zeraveis = [tabuleiro_vazio(), tabuleiro_lotado(), tabuleiro_linhas_intercaladas(), tabuleiro_quase_cheio()]
+@pytest.mark.parametrize("tabuleiro",tabuleiros_zeraveis)
+def teste_todos_os_tabuleiros_devem_ficar_vazios(tabuleiro):
     global tabuleiro_zerado
+    tabuleiro.verifica_linhas_completas()
+    assert tabuleiro.matriz == tabuleiro_zerado
 
-    tabuleiro_vazio.verifica_linhas_completas()
-    tabuleiro_lotado.verifica_linhas_completas()
-    tabuleiro_intercalado.verifica_linhas_completas()
-    tabuleiro_quase_cheio.verifica_linhas_completas()
+@pytest.fixture
+def tabuleiro_celulas_intercaladas():
+    tabuleiro = Tabuleiro()
+    ultima_linha_de_celulas = len(tabuleiro.matriz) - 2
 
-    assert tabuleiro_vazio.matriz == tabuleiro_zerado
-    assert tabuleiro_lotado.matriz == tabuleiro_zerado
-    assert tabuleiro_intercalado.matriz == tabuleiro_zerado
-    assert tabuleiro_quase_cheio.matriz == tabuleiro_zerado
+    for coluna in range( 1 ,len(tabuleiro.matriz[0]) - 1 ):
+        tabuleiro.matriz[ultima_linha_de_celulas][coluna] = 1
+
+    for linha in range( 0 ,ultima_linha_de_celulas ):
+        if linha % 2 == 0:
+            primeira_coluna = 2
+        else:
+            primeira_coluna = 1
+
+        for coluna in range( primeira_coluna, len(tabuleiro.matriz[0]) - 1 , 2 ):
+            tabuleiro.matriz[linha][coluna] = 1
+
+    return tabuleiro
+
+celulas_intercaladas = [[-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, -1],
+                        [-1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, -1],
+                        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]]
+
+def teste_tetrominos_devem_flutuar_sobre_celular_vazias_apos_verificacao(tabuleiro_celulas_intercaladas):
+    global celulas_intercaladas
+
+    tabuleiro_celulas_intercaladas.verifica_linhas_completas()
+
+    assert tabuleiro_celulas_intercaladas.matriz == celulas_intercaladas
