@@ -145,9 +145,12 @@ rotacoes = [('A',rotacoes_a),('B',rotacoes_b),('C',rotacoes_c),
 
 @pytest.mark.parametrize("tipo,rotacao",rotacoes)
 def testa_rotacoes(tipo, rotacao):
-    auxiliar = [[0 for linha in range(4)]for coluna in range(4)]
+
+    auxiliar = Tetromino(tipo)
 
     for i in range(27):
-        auxiliar = Tetromino(tipo)
-        auxiliar.rotaciona(i)
-        assert rotacao[i%4] == auxiliar.matriz
+        auxiliar.rotaciona()
+        indice = i%4 + 1
+        if indice > 3:
+            indice = 0
+        assert rotacao[indice] == auxiliar.matriz
