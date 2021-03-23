@@ -22,9 +22,9 @@ class Tabuleiro:
         for linha in range(18):
             print(self.matriz[linha])
 
-            
+
     def verifica_linhas_completas(self):
-        linha = len(self.tabuleiro.matriz) - 2
+        linha = len(self.matriz) - 2
 
         while linha > 0:
             linha_completa = True
@@ -53,23 +53,28 @@ class Tabuleiro:
 
     def apaga_tetramino(self,tetramino):
         linha = tetramino.linha
-        coluna = tetraminio.coluna
+        coluna = tetramino.coluna
 
-        for i in range(linha, len(tabuleiro.matriz)):
-            for j in range(coluna, len(tabuleiro.matriz[0])):
-                if tabuleiro.matriz[linha][coluna] == 1:
-                    tabuleiro.matriz[linha][coluna] = 0
+        for i in range(len(tabuleiro.matriz)):
+            for j in range(len(tabuleiro.matriz[0])):
+                if tabuleiro.matriz[linha + i][coluna + j] == 1:
+                    tabuleiro.matriz[linha + i][coluna + j] = 0
 
     def coloca_tetramino(self,tetramino):
-        linha = tetramino.linha
+        posicoes = tetramino.pega_posicoes_ocupadas()
 
-        for i in range(len(tetramino.matriz)):
+        linha = tetramino.linha
+        coluna = tetramino.coluna
+        tabuleiro.matriz[linha][coluna] = 1
+
+        for posicao in posicoes:
+            linha = tetramino.linha
             coluna = tetramino.coluna
-            for j in range(len(tetramino.matriz[0])):
-                if tetramino.matriz[i][j]:
-                    tabuleiro.matriz[linha][coluna] = 1
-                coluna += 1
-            linha += 1
+            linha += posicao[0]
+            coluna +=  posicao[1]
+            tabuleiro.matriz[linha][coluna] = 1
+
+
 
     def encaixa_tetramino(self,tetramino):
         linha = tetramino.linha

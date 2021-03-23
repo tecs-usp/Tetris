@@ -154,3 +154,5 @@ def testa_rotacoes(tipo, rotacao):
         if indice > 3:
             indice = 0
         assert rotacao[indice] == auxiliar.matriz
+
+@pytest.mark.parametrize("tipo")
