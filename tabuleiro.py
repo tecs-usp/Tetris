@@ -19,8 +19,10 @@ class Tabuleiro:
             self.matriz[17][coluna] = -1
 
     def mostra_matriz(self):
-        print(self.matriz)
+        for linha in range(18):
+            print(self.matriz[linha])
 
+            
     def verifica_linhas_completas(self):
         linha = len(self.tabuleiro.matriz) - 2
 
@@ -53,8 +55,8 @@ class Tabuleiro:
         linha = tetramino.linha
         coluna = tetraminio.coluna
 
-        for linha in range(len(tabuleiro.matriz)):
-            for coluna in range(len(tabuleiro.matriz[0])):
+        for i in range(linha, len(tabuleiro.matriz)):
+            for j in range(coluna, len(tabuleiro.matriz[0])):
                 if tabuleiro.matriz[linha][coluna] == 1:
                     tabuleiro.matriz[linha][coluna] = 0
 
@@ -71,9 +73,9 @@ class Tabuleiro:
 
     def encaixa_tetramino(self,tetramino):
         linha = tetramino.linha
-        coluna = tetramino.coluna
 
         for i in range(4):
+            coluna = tetramino.coluna
             for j in range(4):
                 pedaco = tetramino.matriz[i][j]
                 if pedaco == 1:
