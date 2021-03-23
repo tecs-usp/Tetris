@@ -29,6 +29,8 @@ class Tetromino:
         self.estado = 0
         self.coluna = 1
         self.tipo = tipo
+        self.eixo_linha = 3
+        self.eixo_coluna = 1
 
         if tipo == 'A':
             i=3
