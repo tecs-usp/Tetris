@@ -65,14 +65,13 @@ class Tabuleiro:
 
         linha = tetramino.linha
         coluna = tetramino.coluna
-        tabuleiro.matriz[linha][coluna] = 1
-
+        
         for posicao in posicoes:
             linha = tetramino.linha
             coluna = tetramino.coluna
             linha += posicao[0]
             coluna +=  posicao[1]
-            tabuleiro.matriz[linha][coluna] = 1
+            self.matriz[linha][coluna] = 1
 
 
 
