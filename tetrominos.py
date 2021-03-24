@@ -26,8 +26,8 @@ class Tetromino:
 
         self.matriz = [[0 for coluna in range(4)] for linha in range(4)]
         self.linha = 0
+        self.coluna = 5
         self.estado = 0
-        self.coluna = 1
         self.tipo = tipo
         self.eixo_linha = 3
         self.eixo_coluna = 1

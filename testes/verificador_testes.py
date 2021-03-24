@@ -15,34 +15,55 @@ def tabuleiro_vazio():
 tetrominos = ['A','B','C','D','E']
 
 @pytest.mark.parametrize("tipo",tetrominos)
-def teste_tetraminos_nao_devem_atravessar_a_parede_esquerda_do_tabuleiro(tipo,tabuleiro_vazio):
+def teste_tetraminos_devem_movimentarse_livremente_ao_surgir_em_tabuleiro_vazio(tipo,tabuleiro_vazio):
     verificador = Verificador()
     tetramino = Tetromino(tipo)
+    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"ESQUERDA")
+    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"DIREITA")
+    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")
+    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"ROTACAO")
+
+@pytest.mark.parametrize("tipo",tetrominos)
+def teste_tetrominos_nao_devem_atravessar_parede_esquerda_do_tabuleiro(tipo,tabuleiro_vazio):
+    verificador = Verificador()
+    tetramino = Tetromino(tipo)
+
+    tetramino.move("BAIXO")
+    limite_para_a_esquerda = tetramino.coluna - 2
+
+    for i in range(limite_para_a_esquerda):
+        assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"ESQUERDA")
+        tetramino.move("ESQUERDA")
+
     assert not verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"ESQUERDA")
 
 @pytest.mark.parametrize("tipo",tetrominos)
-def teste_tetraminos_devem_conseguir_se_mover_para_a_direita_em_tabuleiros_vazios(tipo,tabuleiro_vazio):
+def teste_tetrominos_nao_devem_atravessar_parede_direita_do_tabuleiro(tipo,tabuleiro_vazio):
     verificador = Verificador()
     tetramino = Tetromino(tipo)
-    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"DIREITA")
 
-@pytest.mark.parametrize("tipo",tetrominos)
-def teste_tetraminos_devem_conseguir_se_mover_para_baixo_em_tabuleiros_vazios(tipo ,tabuleiro_vazio):
-    verificador = Verificador()
-    tetramino = Tetromino(tipo)
-    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")
+    tetramino.move("BAIXO")
 
-@pytest.mark.parametrize("tipo",tetrominos)
-def teste_tetraminos_devem_conseguir_rotacionar_em_tabuleiros_vazios(tipo,tabuleiro_vazio):
-    verificador = Verificador()
-    tetramino = Tetromino(tipo)
-    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"ROTACAO")
+    if tipo == 'A':
+        limite_para_direita = tetramino.coluna - 2
+
+    elif tipo == 'B' or tipo == 'C' or tipo == 'D':
+        limite_para_direita = tetramino.coluna - 1
+
+    elif tipo == 'E':
+        limite_para_direita = tetramino.coluna
+
+    for i in range(limite_para_direita):
+        assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"DIREITA")
+        tetramino.move("DIREITA")
+
+    assert not verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"DIREITA")
 
 @pytest.mark.parametrize("tipo",tetrominos)
 def teste_tetraminos_nao_devem_atravessar_o_chao_do_tabuleiro(tipo,tabuleiro_vazio):
     verificador = Verificador()
     tetramino = Tetromino(tipo)
-    for descida in range(14):
+    for descida in range(len(tabuleiro_vazio.matriz) - 1):
         tetramino.move("BAIXO")
 
     assert not verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")
@@ -52,7 +73,7 @@ def teste_tetraminos_nao_devem_atravessar_o_chao_do_tabuleiro(tipo,tabuleiro_vaz
 
 def coloca_parede_interna(tabuleiro):
 
-    coluna = 1
+    coluna = 5
     for linha in range(len(tabuleiro.matriz) - 1 ):
         tabuleiro.matriz[linha][coluna] = 2
 
@@ -60,12 +81,11 @@ def coloca_parede_interna(tabuleiro):
 def teste_tetrominos_nao_devem_ultrapassar_paredes_verticais_de_encaixes(tipo,tabuleiro_vazio):
     verificador = Verificador()
     tetramino = Tetromino(tipo)
-
     assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"DIREITA")
 
     tetramino.move("DIREITA")
+    assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"ESQUERDA")
     coloca_parede_interna(tabuleiro_vazio)
-    print(tetramino.coluna)
 
     assert not verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"ESQUERDA")
 
@@ -74,9 +94,5 @@ def teste_tetrominos_nao_devem_ultrapassar_celula_unica_de_encaixes(tipo,tabulei
     verificador = Verificador()
     tetramino = Tetromino(tipo)
 
-    tabuleiro_vazio.matriz[4][1] = 2
-
-    if tipo != 'D':
-        assert not verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")
-    else:
-        assert verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")
+    tabuleiro_vazio.matriz[tetramino.linha + 1][tetramino.coluna] = 2
+    assert not verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")

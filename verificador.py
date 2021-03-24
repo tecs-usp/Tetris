@@ -20,29 +20,24 @@ class Verificador:
         coluna_inicio = tetramino_movido.coluna
         linhas = len(tetramino_movido.matriz)
         colunas =  len(tetramino_movido.matriz[0])
+        caminho_tetramino = tetramino_movido.pega_posicoes_ocupadas()
 
-        for linha in range(linhas):
-            for coluna in range(colunas):
-                if tetramino_movido.matriz[linha][coluna]:
+        for movimento in caminho_tetramino:
+            linha_ocupada = linha_inicio + movimento[0]
+            coluna_ocupada = coluna_inicio + movimento[1]
 
-                    if linha_inicio + linha >= len(tabuleiro.matriz) - 1:
-                        return False
-                    if coluna_inicio + coluna >= len(tabuleiro.matriz[0]) - 1:
-                        return False
-                    if coluna_inicio + coluna < 1:
-                        return False
+            if linha_ocupada >= len(tabuleiro.matriz) - 1:
+                return False
+            if coluna_ocupada >= len(tabuleiro.matriz[0]) - 1:
+                return False
+            if coluna_ocupada <= 0:
+                return False
 
-        linha_final =  linha_inicio + len(tetramino_movido.matriz)
-        coluna_final = coluna_inicio + len(tetramino_movido.matriz[0])
-        i=0        
-        for linha in range( linha_inicio, linha_final ):
-            j=0
-            for coluna in range( coluna_inicio, coluna_final ):
-
-                if (tabuleiro.matriz[linha][coluna] == 2) and tetramino_movido.matriz[i][j]:
+        for movimento in caminho_tetramino:
+            linha_ocupada = linha_inicio + movimento[0]
+            coluna_ocupada = coluna_inicio + movimento[1]
+            if linha_ocupada > -1:
+                if tabuleiro.matriz[linha_ocupada][coluna_ocupada] == 2:
                     return False
-                j += 1
-
-            i += 1
 
         return True
