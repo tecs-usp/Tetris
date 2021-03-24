@@ -30,7 +30,7 @@ class Tetromino:
         self.coluna = 1
         self.tipo = tipo
         self.eixo_linha = 3
-        self.eixo_coluna = 4
+        self.eixo_coluna = 1
 
         if tipo == 'A':
             i=3
@@ -112,24 +112,40 @@ class Tetromino:
                 nova_posicao = -4*coluna + linha + 12
 
                 if nova_posicao < 4:
-                    antiga_linha = 0
+                    nova_linha = 0
 
                 elif nova_posicao < 8:
-                    antiga_linha = 1
+                    nova_linha = 1
 
                 elif nova_posicao < 12:
-                    antiga_linha = 2
+                    nova_linha = 2
 
                 else:
-                    antiga_linha = 3
+                    nova_linha = 3
 
-                antiga_coluna = nova_posicao % 4
+                nova_coluna = nova_posicao % 4
 
-                if antiga_linha == self.eixo_linha and antiga_coluna == self.eixo_coluna:
-                    self.eixo_linha = linha
-                    self.eixo_coluna = coluna
+                self.matriz[linha][coluna] = auxiliar[nova_linha][nova_coluna]
 
-                self.matriz[linha][coluna] = auxiliar[antiga_linha][antiga_coluna]
+                self.muda_posicao_eixo()
+
+    def muda_posicao_eixo(self):
+
+        if self.estado == 0:
+            self.eixo_linha = 3
+            self.eixo_coluna = 1
+
+        elif self.estado == 1:
+            self.eixo_linha = 1
+            self.eixo_coluna = 0
+
+        elif self.estado == 2:
+            self.eixo_linha = 0
+            self.eixo_coluna =2
+
+        else:
+            self.eixo_linha = 2
+            self.eixo_coluna = 3
 
     def pega_posicoes_ocupadas(self):
 
