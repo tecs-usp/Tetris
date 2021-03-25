@@ -26,8 +26,8 @@ class Tabuleiro:
 
         i = linha
         while i > -1:
-            for coluna in range(1,11):
-                if self.matriz[i][coluna] != 1:
+            for coluna in range(1,len(self.matriz[0]) - 1):
+                if self.matriz[i][coluna] != 1 and  self.matriz[i-1][coluna] != 1:
                     if i > 0:
                         self.matriz[i][coluna] = self.matriz[i-1][coluna]
                     else:

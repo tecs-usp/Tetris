@@ -50,7 +50,7 @@ class Verificador:
             coluna = 1
 
             while linha_completa and coluna < 11:
-                if tabuleiro.matriz[linha][coluna] == 0 or tabuleiro.matriz[linha][coluna] == 1:
+                if tabuleiro.matriz[linha][coluna] != 2:
                     linha_completa = False
                 coluna += 1
 

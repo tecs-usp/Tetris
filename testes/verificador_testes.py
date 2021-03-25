@@ -1,4 +1,4 @@
-import os, sys, pytest
+import os, sys, pytest, copy
 
 diretorio_atual = os.path.dirname(os.path.realpath(__file__))
 diretorio_pai = os.path.dirname(diretorio_atual)
@@ -193,8 +193,26 @@ celulas_intercaladas = [[-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
 def teste_tetrominos_devem_flutuar_sobre_celular_vazias_apos_verificacao(tabuleiro_celulas_intercaladas):
     global celulas_intercaladas
 
-    verificador  = Verificador()
+    verificador = Verificador()
 
     verificador.verifica_linhas_completas(tabuleiro_celulas_intercaladas)
 
     assert tabuleiro_celulas_intercaladas.matriz == celulas_intercaladas
+
+
+@pytest.mark.parametrize("tipo",tetrominos)
+def teste_tetrominos_nao_encaixados_nao_devem_moverse_na_marcacao_de_pontos(tipo,tabuleiro_vazio):
+
+    verificador = Verificador()
+    tetramino  = Tetromino(tipo)
+    tabuleiro_auxiliar = copy.deepcopy(tabuleiro_vazio)
+    tetramino.move("BAIXO")
+    tabuleiro_auxiliar.coloca_tetramino(tetramino)
+
+    for coluna in range(1,len(tabuleiro_vazio.matriz[0]) - 1):
+        tabuleiro_vazio.matriz[len(tabuleiro_vazio.matriz) - 2][coluna] = 2
+
+    tabuleiro_vazio.coloca_tetramino(tetramino)
+    verificador.verifica_linhas_completas(tabuleiro_vazio)
+
+    assert tabuleiro_vazio.matriz == tabuleiro_auxiliar.matriz
