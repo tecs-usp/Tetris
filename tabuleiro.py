@@ -41,7 +41,9 @@ class Tabuleiro:
         caminho_tetramino = tetramino.pega_posicoes_ocupadas()
 
         for movimento in caminho_tetramino:
-            self.matriz[linha + movimento[0]][coluna + movimento[1]] = 0
+            i = linha + movimento[0]
+            if i>=0:
+                self.matriz[linha + movimento[0]][coluna + movimento[1]] = 0
 
     def coloca_tetramino(self,tetramino):
         posicoes = tetramino.pega_posicoes_ocupadas()
