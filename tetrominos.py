@@ -25,6 +25,12 @@ class Tetromino:
     def __init__(self,tipo):
 
         self.matriz = [[0 for coluna in range(4)] for linha in range(4)]
+        self.linha = 0
+        self.coluna = 5
+        self.estado = 0
+        self.tipo = tipo
+        self.eixo_linha = 3
+        self.eixo_coluna = 1
 
         if tipo == 'A':
             i=3
@@ -81,59 +87,82 @@ class Tetromino:
                     i+=1
                     j=0
 
+    def move(self,direcao):
+        if direcao == "BAIXO":
+            self.linha += 1
+        elif direcao == "DIREITA":
+            self.coluna += 1
+        elif direcao =="ESQUERDA":
+            self.coluna -=1
+
+
     #responsável por rotacionar os tetrominos
-    def rotaciona(self,rotacao):
+    def rotaciona(self):
 
-        #pega os angulos congruos das rotações, sendo que
-        #resto == 0 -> 0º
-        #resto == 1 -> 90º
-        #resto == 2 -> 180º
-        #resto == 3 -> 270º
-        resto = rotacao%4
-
-        if resto == 0:
-            #rotacoes congruas a 0º equivalem a não rotacionar o tetromino
-            return
-
-
+        self.estado += 1
+        self.estado = self.estado % 4
         auxiliar = [[0 for linha in range(4)] for coluna in range(4)]
 
         for i in range(4):
             for j in range(4):
                 auxiliar[i][j]=self.matriz[i][j]
 
-        if resto == 1:
-            coef_linha = 1
-            coef_coluna = -4
-            coef_linear = 12
-
-        elif resto == 2:
-            coef_linha = -4
-            coef_coluna = -1
-            coef_linear = 15
-
-        elif resto == 3:
-            coef_linha = -1
-            coef_coluna = 4
-            coef_linear = 3
-
-
         for linha in range(4):
             for coluna in range(4):
-                nova_posicao = coluna*coef_coluna + coef_linha*linha + coef_linear
+                nova_posicao = -4*coluna + linha + 12
 
                 if nova_posicao < 4:
-                    antiga_linha = 0
+                    nova_linha = 0
 
                 elif nova_posicao < 8:
-                    antiga_linha = 1
+                    nova_linha = 1
 
                 elif nova_posicao < 12:
-                    antiga_linha = 2
+                    nova_linha = 2
 
                 else:
-                    antiga_linha = 3
+                    nova_linha = 3
 
-                antiga_coluna = nova_posicao % 4
+                nova_coluna = nova_posicao % 4
 
-                self.matriz[linha][coluna] = auxiliar[antiga_linha][antiga_coluna]
+                self.matriz[linha][coluna] = auxiliar[nova_linha][nova_coluna]
+
+                self.muda_posicao_eixo()
+
+    def muda_posicao_eixo(self):
+
+        if self.estado == 0:
+            self.eixo_linha = 3
+            self.eixo_coluna = 1
+
+        elif self.estado == 1:
+            self.eixo_linha = 1
+            self.eixo_coluna = 0
+
+        elif self.estado == 2:
+            self.eixo_linha = 0
+            self.eixo_coluna =2
+
+        else:
+            self.eixo_linha = 2
+            self.eixo_coluna = 3
+
+    def pega_posicoes_ocupadas(self):
+
+        posicoes = []
+
+        linha = self.eixo_linha
+        coluna = self.eixo_coluna
+
+        i = 0
+        while(i < len(self.matriz)):
+            j = 0
+            while( j < len(self.matriz[0])):
+                if self.matriz[i][j]:
+                    distancia_linha = i - linha
+                    distancia_coluna = j - coluna
+                    posicoes.append((distancia_linha, distancia_coluna))
+                j += 1
+            i += 1
+
+        return posicoes
