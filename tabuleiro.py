@@ -59,13 +59,14 @@ class Tabuleiro:
 
 
     def encaixa_tetramino(self,tetramino):
-        linha = tetramino.linha
+        posicoes = tetramino.pega_posicoes_ocupadas()
 
-        for i in range(4):
+        linha = tetramino.linha
+        coluna = tetramino.coluna
+
+        for posicao in posicoes:
+            linha = tetramino.linha
             coluna = tetramino.coluna
-            for j in range(4):
-                pedaco = tetramino.matriz[i][j]
-                if pedaco == 1:
-                    tabuleiro.matriz[linha][coluna] = 2
-                coluna += 1
-            linha += 1
+            linha += posicao[0]
+            coluna +=  posicao[1]
+            self.matriz[linha][coluna] = 2
