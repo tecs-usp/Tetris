@@ -45,27 +45,28 @@ class Tabuleiro:
         i = linha
         while i > -1:
             for coluna in range(1,11):
-                if i > 0:
-                    self.matriz[i][coluna] = self.matriz[i-1][coluna]
-                else:
-                    self.matriz[i][coluna] = 0
+                if self.matriz[i][coluna] != 1:
+                    if i > 0:
+                        self.matriz[i][coluna] = self.matriz[i-1][coluna]
+                    else:
+                        self.matriz[i][coluna] = 0
             i -= 1
 
     def apaga_tetramino(self,tetramino):
         linha = tetramino.linha
         coluna = tetramino.coluna
 
-        for i in range(len(tabuleiro.matriz)):
-            for j in range(len(tabuleiro.matriz[0])):
-                if tabuleiro.matriz[linha + i][coluna + j] == 1:
-                    tabuleiro.matriz[linha + i][coluna + j] = 0
+        caminho_tetramino = tetramino.pega_posicoes_ocupadas()
+
+        for movimento in caminho_tetramino:
+            self.matriz[linha + movimento[0]][coluna + movimento[1]] = 0
 
     def coloca_tetramino(self,tetramino):
         posicoes = tetramino.pega_posicoes_ocupadas()
 
         linha = tetramino.linha
         coluna = tetramino.coluna
-        
+
         for posicao in posicoes:
             linha = tetramino.linha
             coluna = tetramino.coluna

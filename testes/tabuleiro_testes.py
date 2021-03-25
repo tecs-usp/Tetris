@@ -6,6 +6,7 @@ sys.path.append(diretorio_pai)
 
 from tabuleiro import Tabuleiro
 from tetrominos import Tetromino
+from verificador import Verificador
 import copy
 
 def tabuleiro_vazio():
@@ -224,3 +225,23 @@ def teste_tetraminos_devem_ser_posicionados_corretamente(tipo,tabuleiro_vazio):
         tabuleiro_esperado = tabuleiro_com_tetramino(tabuleiro_vazio_auxiliar,tetramino)
         tabuleiro_vazio_auxiliar.coloca_tetramino(tetramino)
         assert tabuleiro_esperado == tabuleiro_vazio_auxiliar
+
+tipos = ['A','B','C','D','E']
+@pytest.mark.parametrize("tipo",tipos)
+def teste_tetraminos_devem_descer_o_tabuleiro_corretamente(tipo,tabuleiro_vazio):
+
+    tetramino = Tetromino(tipo)
+    verificador = Verificador()
+
+    for i in range(4):
+        while(verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")):
+            tetramino.move("BAIXO")
+            tabuleiro_esperado = tabuleiro_com_tetramino(tabuleiro_vazio,tetramino)
+            tabuleiro_vazio.coloca_tetramino(tetramino)
+            assert tabuleiro_esperado == tabuleiro_vazio
+
+            tabuleiro_vazio.apaga_tetramino(tetramino)
+
+        tetramino.rotaciona()
+        tetramino.linha = 0
+        tetramino.coluna = 5
