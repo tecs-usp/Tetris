@@ -61,8 +61,16 @@ class Verificador:
 
     def fim_de_jogo(self,tabuleiro):
 
-        for coluna in range(1, len(tabuleiro.matriz[0]) - 1 ):
-            if tabuleiro.matriz[0][1] != 0:
-                return True
+        coluna = 1
 
-        return True
+        while coluna < len(tabuleiro.matriz[0]) - 1:
+            coluna_completa = True
+            linha = 0
+            while linha < len(tabuleiro.matriz) -1 and coluna_completa:
+                if tabuleiro.matriz[linha][coluna] != 2:
+                    coluna_completa = False
+                linha += 1
+                if coluna_completa:
+                    return True
+            coluna += 1
+        return False    
