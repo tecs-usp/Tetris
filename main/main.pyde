@@ -285,7 +285,7 @@ class Verificador:
     def fim_de_jogo(self,tabuleiro):
 
         coluna = 1
-        
+
         while coluna < len(tabuleiro.matriz[0]) - 1:
             coluna_completa = True
             linha = 0
@@ -295,8 +295,8 @@ class Verificador:
                 linha += 1
                 if coluna_completa:
                     return True
-            coluna += 1   
-        return False        
+            coluna += 1
+        return False
 
 seed(1)
 tipos_de_tetraminos = ['A','B','C','D','E']
@@ -306,6 +306,12 @@ verificador = Verificador()
 direcao = "BAIXO"
 proximo_tetramino = False
 inicio = time.time()
+comando = False
+
+def keyReleased():
+    global comando
+
+    comando = True
 
 def keyPressed():
     global direcao
@@ -331,6 +337,7 @@ def principal():
     global direcao
     global proximo_tetramino
     global inicio
+    global comando
 
     #manejo do tempo
     agora = time.time()
@@ -349,13 +356,15 @@ def principal():
 
 
     #lógica do jogo
-    if keyPressed:
+    if comando:
 
         if verificador.cabe_tetramino(tabuleiro,tetramino,direcao):
             tabuleiro.apaga_tetramino(tetramino)
 
             tetramino.movimenta(direcao)
             tabuleiro.coloca_tetramino(tetramino)
+
+        comando = False
 
     if proximo_tetramino:
         tetramino = Tetromino(choice(tipos_de_tetraminos))
@@ -364,7 +373,7 @@ def principal():
 
 def imprime_tabuleiro():
     global tabuleiro
-    
+
     background(0)
     fill(255,182,192)
     stroke(0)
@@ -389,7 +398,7 @@ def draw():
     global tabuleiro
 
     principal()
-    
+
     #código para imprimir o tabuleiro após execução da lógica
     imprime_tabuleiro()
 
