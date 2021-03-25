@@ -41,3 +41,20 @@ class Verificador:
                     return False
 
         return True
+
+    def verifica_linhas_completas(self,tabuleiro):
+        linha = len(tabuleiro.matriz) - 2
+
+        while linha > 0:
+            linha_completa = True
+            coluna = 1
+
+            while linha_completa and coluna < 11:
+                if tabuleiro.matriz[linha][coluna] == 0 or tabuleiro.matriz[linha][coluna] == 1:
+                    linha_completa = False
+                coluna += 1
+
+            if linha_completa:
+                tabuleiro.limpa_linha(linha)
+                linha += 1
+            linha -= 1

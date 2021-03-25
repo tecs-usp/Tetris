@@ -22,25 +22,7 @@ class Tabuleiro:
         for linha in range(18):
             print(self.matriz[linha])
 
-
-    def verifica_linhas_completas(self):
-        linha = len(self.matriz) - 2
-
-        while linha > 0:
-            linha_completa = True
-            coluna = 1
-
-            while linha_completa and coluna < 11:
-                if self.matriz[linha][coluna] == 0:
-                    linha_completa = False
-                coluna += 1
-
-            if linha_completa:
-                self.consome_tetrominos(linha)
-                linha += 1
-            linha -= 1
-
-    def consome_tetrominos(self,linha):
+    def limpa_linha(self,linha):
 
         i = linha
         while i > -1:
