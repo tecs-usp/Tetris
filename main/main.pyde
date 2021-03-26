@@ -316,7 +316,7 @@ def keyReleased():
 def keyPressed():
     global direcao
 
-    if key == CODED: ###na real n precisa disso: da pra tirar o if key==CODED e deixar td junto, mas ainda vai ter que usar o keyCode em vez do key
+    if key == CODED: 
         if keyCode == DOWN:
             direcao = "BAIXO"
 
@@ -328,6 +328,7 @@ def keyPressed():
 
         elif keyCode == RIGHT:
             direcao = "DIREITA"
+            
 def principal():
 
     global tetramino
@@ -378,7 +379,7 @@ def imprime_tabuleiro():
     fill(255,182,192)
     stroke(0)
 
-    y=height - 40
+    y=0
 
     for linha in range(0,len(tabuleiro.matriz) - 1):
         x=0
@@ -386,7 +387,7 @@ def imprime_tabuleiro():
             if tabuleiro.matriz[linha][coluna] != 0:
                 rect(x,y,40,40)
             x += 40
-        y -= 40
+        y += 40
 
 
 def setup():
