@@ -282,22 +282,13 @@ class Verificador:
                 linha += 1
             linha -= 1
 
-    def fim_de_jogo(self,tabuleiro):
+            def fim_de_jogo(self,tabuleiro):
 
-        coluna = 1
+                for coluna in range(1,len(tabuleiro.matriz[0]) - 1):
+                    if tabuleiro.matriz[0][coluna] == 2:
+                        return True
 
-        while coluna < len(tabuleiro.matriz[0]) - 1:
-            coluna_completa = True
-            linha = 0
-            while linha < len(tabuleiro.matriz) -1 and coluna_completa:
-                if tabuleiro.matriz[linha][coluna] != 2:
-                    coluna_completa = False
-                linha += 1
-                if coluna_completa:
-                    return True
-            coluna += 1
-        return False
-
+                return False
 seed(1)
 tipos_de_tetraminos = ['A','B','C','D','E']
 tabuleiro = Tabuleiro()
@@ -316,7 +307,7 @@ def keyReleased():
 def keyPressed():
     global direcao
 
-    if key == CODED: 
+    if key == CODED:
         if keyCode == DOWN:
             direcao = "BAIXO"
 
@@ -328,7 +319,7 @@ def keyPressed():
 
         elif keyCode == RIGHT:
             direcao = "DIREITA"
-            
+
 def principal():
 
     global tetramino
