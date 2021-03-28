@@ -282,13 +282,12 @@ class Verificador:
                 linha += 1
             linha -= 1
 
-            def fim_de_jogo(self,tabuleiro):
+    def fim_de_jogo(self,tabuleiro):
+        for coluna in range(1,len(tabuleiro.matriz[0]) - 1):
+            if tabuleiro.matriz[0][coluna] == 2:
+                return True
 
-                for coluna in range(1,len(tabuleiro.matriz[0]) - 1):
-                    if tabuleiro.matriz[0][coluna] == 2:
-                        return True
-
-                return False
+        return False
 seed(1)
 tipos_de_tetraminos = ['A','B','C','D','E']
 tabuleiro = Tabuleiro()
