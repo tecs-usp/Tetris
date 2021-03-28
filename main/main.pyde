@@ -288,7 +288,8 @@ class Verificador:
                 return True
 
         return False
-seed(1)
+
+        
 tipos_de_tetraminos = ['A','B','C','D','E']
 tabuleiro = Tabuleiro()
 tetramino = Tetromino(choice(tipos_de_tetraminos))
