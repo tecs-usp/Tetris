@@ -84,6 +84,7 @@ class Tetromino:
         self.tipo = tipo
         self.eixo_linha = 3
         self.eixo_coluna = 1
+        self.cor = choice([(247, 168, 184),(242, 201, 212),(160, 219, 242),(85, 205, 252)])
 
         if tipo == 'A':
             i=3
@@ -369,10 +370,12 @@ def principal():
 
 def imprime_tabuleiro():
     global tabuleiro
+    global cores
+    global tetramino
 
-    background(0)
-    fill(255,182,192)
-    stroke(0)
+    background(255,255,255)
+    stroke(255,255,255)
+    fill(*tetramino.cor)
 
     y=0
 

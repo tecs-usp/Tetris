@@ -17,7 +17,7 @@
 #             EE
 
 
-
+from random import choice
 #gera todos os tipos de tetrominós
 class Tetromino:
 
@@ -31,6 +31,7 @@ class Tetromino:
         self.tipo = tipo
         self.eixo_linha = 3
         self.eixo_coluna = 1
+        self.cor = choice([(247, 168, 184),(242, 201, 212),(160, 219, 242),(85, 205, 252)])
 
         if tipo == 'A':
             i=3
