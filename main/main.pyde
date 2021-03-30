@@ -289,7 +289,7 @@ class Verificador:
 
         return False
 
-        
+
 tipos_de_tetraminos = ['A','B','C','D','E']
 tabuleiro = Tabuleiro()
 tetramino = Tetromino(choice(tipos_de_tetraminos))
@@ -384,6 +384,7 @@ def imprime_tabuleiro():
 def setup():
     size(400, 680)
     strokeWeight(4)
+    noCursor()
 
 def draw():
     global verificador

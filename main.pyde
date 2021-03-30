@@ -101,6 +101,7 @@ def imprime_tabuleiro():
 def setup():
     size(400, 680)
     strokeWeight(4)
+    noCursor()
 
 def draw():
     global verificador
