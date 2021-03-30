@@ -87,6 +87,12 @@ class Tetromino:
                     i+=1
                     j=0
 
+    def movimenta(self,direcao):
+        if direcao != "ROTACAO":
+            self.move(direcao)
+        else:
+            self.rotaciona()
+
     def move(self,direcao):
         if direcao == "BAIXO":
             self.linha += 1
