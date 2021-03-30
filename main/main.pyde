@@ -297,28 +297,32 @@ verificador = Verificador()
 direcao = "BAIXO"
 proximo_tetramino = False
 inicio = time.time()
-comando = False
-
-def keyReleased():
-    global comando
-
-    comando = True
+tecla_valida = False
 
 def keyPressed():
     global direcao
+    global tecla_valida
 
     if key == CODED:
         if keyCode == DOWN:
             direcao = "BAIXO"
+            tecla_valida = True
 
         elif keyCode == UP:
             direcao = "ROTACAO"
+            tecla_valida = True
 
         elif keyCode == LEFT:
             direcao = "ESQUERDA"
+            tecla_valida = True
 
         elif keyCode == RIGHT:
             direcao = "DIREITA"
+            tecla_valida = True
+        else:
+            tecla_valida = False
+    else:
+        tecla_valida = False
 
 def principal():
 
@@ -329,7 +333,7 @@ def principal():
     global direcao
     global proximo_tetramino
     global inicio
-    global comando
+    global tecla_valida
 
     #manejo do tempo
     agora = time.time()
@@ -348,7 +352,7 @@ def principal():
 
 
     #lógica do jogo
-    if comando:
+    if tecla_valida and diferenca_de_tempo>=0.2:
 
         if verificador.cabe_tetramino(tabuleiro,tetramino,direcao):
             tabuleiro.apaga_tetramino(tetramino)
@@ -356,7 +360,7 @@ def principal():
             tetramino.movimenta(direcao)
             tabuleiro.coloca_tetramino(tetramino)
 
-        comando = False
+        tecla_valida = False
 
     if proximo_tetramino:
         tetramino = Tetromino(choice(tipos_de_tetraminos))
