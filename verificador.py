@@ -49,7 +49,7 @@ class Verificador:
             linha_completa = True
             coluna = 1
 
-            while linha_completa and coluna < 11:
+            while linha_completa and coluna < (len(tabuleiro.matriz[0]) - 1):
                 if tabuleiro.matriz[linha][coluna] != 2:
                     linha_completa = False
                 coluna += 1

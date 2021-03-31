@@ -8,6 +8,7 @@ class Tabuleiro:
 
         self.matriz = [[0 for coluna in range(12)] for linha in range(18)]
         self.linhas_completas = []
+        self.matriz_de_cores = [[[255,255,255] for coluna in range(len(self.matriz[0]))] for linha in range(len(self.matriz))]
 
         for linha in range(17):
             for coluna in (0,11):
@@ -42,6 +43,7 @@ class Tabuleiro:
             i = linha + movimento[0]
             if i>=0:
                 self.matriz[linha + movimento[0]][coluna + movimento[1]] = 0
+                self.matriz_de_cores[linha + movimento[0]][coluna + movimento[1]] = [255,255,255]
 
     def coloca_tetramino(self,tetramino):
         posicoes = tetramino.pega_posicoes_ocupadas()
@@ -54,13 +56,12 @@ class Tabuleiro:
             coluna = tetramino.coluna
             linha += posicao[0]
             coluna +=  posicao[1]
-            self.matriz[linha][coluna] = 1
-
-
+            if linha > -1:
+                self.matriz[linha][coluna] = 1
+                self.matriz_de_cores[linha][coluna] = tetramino.cor
 
     def encaixa_tetramino(self,tetramino):
         posicoes = tetramino.pega_posicoes_ocupadas()
-
         linha = tetramino.linha
         coluna = tetramino.coluna
 
@@ -69,8 +70,9 @@ class Tabuleiro:
             coluna = tetramino.coluna
             linha += posicao[0]
             coluna +=  posicao[1]
-            self.matriz[linha][coluna] = 2
-
+            if linha > -1:
+                self.matriz[linha][coluna] = 2
+                self.matriz_de_cores[linha][coluna] = tetramino.cor
 
 class Tetromino:
 
@@ -273,7 +275,7 @@ class Verificador:
             linha_completa = True
             coluna = 1
 
-            while linha_completa and coluna < 11:
+            while linha_completa and coluna < (len(tabuleiro.matriz[0]) - 1):
                 if tabuleiro.matriz[linha][coluna] != 2:
                     linha_completa = False
                 coluna += 1
@@ -375,7 +377,6 @@ def imprime_tabuleiro():
 
     background(255,255,255)
     stroke(255,255,255)
-    fill(*tetramino.cor)
 
     y=0
 
@@ -383,6 +384,7 @@ def imprime_tabuleiro():
         x=0
         for coluna in range(1,len(tabuleiro.matriz[0]) - 1):
             if tabuleiro.matriz[linha][coluna] != 0:
+                fill(*tabuleiro.matriz_de_cores[linha][coluna])
                 rect(x,y,40,40)
             x += 40
         y += 40

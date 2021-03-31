@@ -10,7 +10,7 @@ class Tabuleiro:
 
         self.matriz = [[0 for coluna in range(12)] for linha in range(18)]
         self.linhas_completas = []
-        self.matriz_de_cores = [[[255,255,255] for coluna in range(len(self.matriz[0]))] for linha in range(len(self.matriz))
+        self.matriz_de_cores = [[[255,255,255] for coluna in range(len(self.matriz[0]))] for linha in range(len(self.matriz))]
 
         for linha in range(17):
             for coluna in (0,11):
@@ -45,35 +45,33 @@ class Tabuleiro:
             i = linha + movimento[0]
             if i>=0:
                 self.matriz[linha + movimento[0]][coluna + movimento[1]] = 0
+                self.matriz_de_cores[linha + movimento[0]][coluna + movimento[1]] = [255,255,255]
 
     def coloca_tetramino(self,tetramino):
         posicoes = tetramino.pega_posicoes_ocupadas()
 
         linha = tetramino.linha
         coluna = tetramino.coluna
-        i = 0
 
         for posicao in posicoes:
             linha = tetramino.linha
             coluna = tetramino.coluna
             linha += posicao[0]
             coluna +=  posicao[1]
-            self.matriz[linha][coluna] = 1
-            self.matriz_de_cores[linha][coluna][i] = tetramino.cor[i]
-            i += 1
+            if linha > -1:
+                self.matriz[linha][coluna] = 1
+                self.matriz_de_cores[linha][coluna] = tetramino.cor
 
     def encaixa_tetramino(self,tetramino):
         posicoes = tetramino.pega_posicoes_ocupadas()
-
         linha = tetramino.linha
         coluna = tetramino.coluna
-        i = 0
 
         for posicao in posicoes:
             linha = tetramino.linha
             coluna = tetramino.coluna
             linha += posicao[0]
             coluna +=  posicao[1]
-            self.matriz[linha][coluna] = 2
-            self.matriz_de_cores[linha][coluna][i] = tetramino.cor[i]
-            i += 1
+            if linha > -1:
+                self.matriz[linha][coluna] = 2
+                self.matriz_de_cores[linha][coluna] = tetramino.cor
