@@ -31,6 +31,7 @@ class Tabuleiro:
                 if self.matriz[i][coluna] != 1 and  self.matriz[i-1][coluna] != 1:
                     if i > 0:
                         self.matriz[i][coluna] = self.matriz[i-1][coluna]
+                        self.matriz_de_cores[i][coluna]=self.matriz_de_cores[i-1][coluna]
                     else:
                         self.matriz[i][coluna] = 0
             i -= 1
