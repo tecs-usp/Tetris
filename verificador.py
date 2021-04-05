@@ -44,6 +44,7 @@ class Verificador:
 
     def verifica_linhas_completas(self,tabuleiro):
         linha = len(tabuleiro.matriz) - 2
+        linhas_completas = []
 
         while linha > 0:
             linha_completa = True
@@ -55,9 +56,10 @@ class Verificador:
                 coluna += 1
 
             if linha_completa:
-                tabuleiro.limpa_linha(linha)
-                linha += 1
+                linhas_completas.append(linha)
             linha -= 1
+
+        return linhas_completas
 
     def fim_de_jogo(self,tabuleiro):
 

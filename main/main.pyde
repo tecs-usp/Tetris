@@ -87,7 +87,7 @@ class Tetromino:
         self.tipo = tipo
         self.eixo_linha = 3
         self.eixo_coluna = 1
-        self.cor = choice([(247, 168, 184),(242, 201, 212),(160, 219, 242),(85, 205, 252)])
+        self.cor = choice([[247, 168, 184],[242, 201, 212],[160, 219, 242],[85, 205, 252]])
 
         if tipo == 'A':
             i=3
@@ -271,6 +271,7 @@ class Verificador:
 
     def verifica_linhas_completas(self,tabuleiro):
         linha = len(tabuleiro.matriz) - 2
+        linhas_completas = []
 
         while linha > 0:
             linha_completa = True
@@ -282,9 +283,11 @@ class Verificador:
                 coluna += 1
 
             if linha_completa:
-                tabuleiro.limpa_linha(linha)
-                linha += 1
+                linhas_completas.append(linha)
+
             linha -= 1
+
+        return linhas_completas
 
     def fim_de_jogo(self,tabuleiro):
         for coluna in range(1,len(tabuleiro.matriz[0]) - 1):
@@ -293,15 +296,41 @@ class Verificador:
 
         return False
 
+class Animador:
+
+    def __init__(self):
+        pass
+
+    def pinta_linhas_completas(self,tabuleiro,linhas_completas):
+
+        comprimento_linha = len(tabuleiro.matriz_de_cores[0]) - 2
+
+        tamanho_azul = comprimento_linha//3
+
+        tamanho_branco = comprimento_linha - tamanho_azul*2
+
+
+        for linha in linhas_completas:
+            for coluna in range(1,len(tabuleiro.matriz[linha]) - 1):
+                if coluna < tamanho_azul:
+                    tabuleiro.matriz_de_cores[linha][coluna] = [85, 205, 252] #azul
+                elif coluna < tamanho_azul + tamanho_branco:
+                    tabuleiro.matriz_de_cores[linha][coluna] =  [255, 255, 255] #branco
+                else:
+                    tabuleiro.matriz_de_cores[linha][coluna] = [247, 168, 184] #rosa
+
 
 tipos_de_tetraminos = ['A','B','C','D','E']
 tabuleiro = Tabuleiro()
 tetramino = Tetromino(choice(tipos_de_tetraminos))
 verificador = Verificador()
+animador = Animador()
 direcao = "BAIXO"
 proximo_tetramino = False
 inicio = time.time()
 tecla_valida = False
+linhas_completas = []
+animacao_de_linha_completa = False
 
 def keyPressed():
     global direcao
@@ -334,16 +363,26 @@ def principal():
     global tabuleiro
     global tipos_de_tetraminos
     global verificador
+    global animador
     global direcao
     global proximo_tetramino
     global inicio
     global tecla_valida
+    global linhas_completas
+    global animacao_de_linha_completa
 
     #manejo do tempo
     agora = time.time()
     diferenca_de_tempo = agora - inicio
 
     if diferenca_de_tempo >= 0.5:
+
+        if len(linhas_completas) > 0:
+            for linha in reversed(linhas_completas):
+                tabuleiro.limpa_linha(linha)
+
+            linhas_completas=[]
+
         if verificador.cabe_tetramino(tabuleiro, tetramino,"BAIXO"):
             tabuleiro.apaga_tetramino(tetramino)
             tetramino.movimenta("BAIXO")
@@ -352,11 +391,15 @@ def principal():
         else:
             proximo_tetramino = True
             tabuleiro.encaixa_tetramino(tetramino)
-            verificador.verifica_linhas_completas(tabuleiro)
+            linhas_completas = verificador.verifica_linhas_completas(tabuleiro)
+            if len(linhas_completas) > 0:
+                animador.pinta_linhas_completas(tabuleiro,linhas_completas)
+                animacao_de_linha_completa = True
+
 
 
     #lógica do jogo
-    if tecla_valida and diferenca_de_tempo>=0.2:
+    if tecla_valida and diferenca_de_tempo>=0.2 and not proximo_tetramino:
 
         if verificador.cabe_tetramino(tabuleiro,tetramino,direcao):
             tabuleiro.apaga_tetramino(tetramino)
@@ -399,8 +442,16 @@ def setup():
 def draw():
     global verificador
     global tabuleiro
+    global animacao_de_linha_completa
+    global inicio
 
     principal()
+
+    if animacao_de_linha_completa:
+        delay(3000)
+        inicio = time.time()
+        animacao_de_linha_completa = False
+
 
     #código para imprimir o tabuleiro após execução da lógica
     imprime_tabuleiro()
