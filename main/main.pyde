@@ -46,34 +46,29 @@ class Tabuleiro:
                 self.matriz[linha + movimento[0]][coluna + movimento[1]] = 0
                 self.matriz_de_cores[linha + movimento[0]][coluna + movimento[1]] = [255,255,255]
 
-    def coloca_tetramino(self,tetramino):
-        posicoes = tetramino.pega_posicoes_ocupadas()
+    def coloca_tetramino(self,tetramino,encaixe):
 
-        linha = tetramino.linha
-        coluna = tetramino.coluna
+        #define as instrucoes para colocar os tijolos no tabuleiro
+        #a partir de suas posicoes em relacao ao referencial eixo de rotacao.
+        #Ja que o eixo de rotacao eh o primeiro tijolo a ser colocado
+        #no tabuleiro apos movimentacao, a posicao de todos os outros
+        #pode ser definida por sua posicao relativa eo eixo referencial
+        caminho = tetramino.pega_posicoes_ocupadas()
 
-        for posicao in posicoes:
-            linha = tetramino.linha
-            coluna = tetramino.coluna
-            linha += posicao[0]
-            coluna +=  posicao[1]
-            if linha > -1:
-                self.matriz[linha][coluna] = 1
-                self.matriz_de_cores[linha][coluna] = tetramino.cor
+        #guarda a posicao a partir de qual os blocos de tijolos serao encaixados
+        #Ex: coloque um tijolo uma linha acima e duas colunas a direita da atual
+        referencial_linha = tetramino.linha
+        referencial_coluna = tetramino.coluna
 
-    def encaixa_tetramino(self,tetramino):
-        posicoes = tetramino.pega_posicoes_ocupadas()
-        linha = tetramino.linha
-        coluna = tetramino.coluna
+        for direcao in caminho:
+            referencial_linha = tetramino.linha
+            referencial_coluna = tetramino.coluna
+            referencial_linha += direcao[0]
+            referencial_coluna +=  direcao[1]
+            if referencial_linha > -1:
+                self.matriz[referencial_linha][referencial_coluna] = encaixe
+                self.matriz_de_cores[referencial_linha][referencial_coluna] = tetramino.cor
 
-        for posicao in posicoes:
-            linha = tetramino.linha
-            coluna = tetramino.coluna
-            linha += posicao[0]
-            coluna +=  posicao[1]
-            if linha > -1:
-                self.matriz[linha][coluna] = 2
-                self.matriz_de_cores[linha][coluna] = tetramino.cor
 
 class Tetromino:
 
@@ -81,68 +76,59 @@ class Tetromino:
     def __init__(self,tipo):
 
         self.matriz = [[0 for coluna in range(4)] for linha in range(4)]
+
+        #Marcam a referencial principal para localizar um  tetramino na matriz do tabuleiro,
+        #que eh seu eixo de rotacao
+        #No init, essa posicao eh no centro da primeira linha. Sao modificados
+        #pelo metodo move()
         self.linha = 0
         self.coluna = 5
+
+        #atributo que diz qual das 4 posicoes possiveis para cada tetramino
+        #é a atual. Essas posições são definidas para os valores [0,1,2,3],
+        #a cada input UP o valor é incrementado pelo método rotaciona()
+        #voltando para o estado inicial após a 3a rotação.
         self.estado = 0
+
         self.tipo = tipo
+
+        #marcam a posicao em relacao a matriz do tabuleiro que o eixo do tetramino se encontra
+        #no init, essa posicao eh no centro da primeira linha. Sao modificados
+        #pelo metodo
         self.eixo_linha = 3
         self.eixo_coluna = 1
+
         self.cor = choice([(247, 168, 184),(242, 201, 212),(160, 219, 242),(85, 205, 252)])
 
         if tipo == 'A':
-            i=3
-            j=0
-            while(j<4):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [0,0,0,0],
+                           [1,1,1,1]]
 
         elif tipo == 'B':
-            i=2
-            j=0
-
-            self.matriz[i][j]=1
-            i+=1
-
-            while(j<3):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [1,0,0,0],
+                           [1,1,1,0]]
 
         elif tipo == 'C':
-            i=2
-            j=1
-
-            self.matriz[i][j]=1
-            i+=1
-            j=0
-
-            while(j<3):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [0,1,0,0],
+                           [1,1,1,0]]
 
         elif tipo == 'D':
-            i=2
-            j=0
-
-            self.matriz[i][j]=1
-            j+=1
-            self.matriz[i][j]=1
-            i+=1
-
-            while(j<3):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [1,1,0,0],
+                           [0,1,1,0]]
 
         elif tipo == 'E':
-                i=2
-                j=0
-
-                while(i<4):
-                    while(j<2):
-                        self.matriz[i][j]=1
-                        j+=1
-
-                    i+=1
-                    j=0
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [1,1,0,0],
+                           [1,1,0,0]]
 
     def movimenta(self,direcao):
         if direcao != "ROTACAO":
@@ -150,6 +136,7 @@ class Tetromino:
         else:
             self.rotaciona()
 
+    #translada o tetramino pelo tabuleiro
     def move(self,direcao):
         if direcao == "BAIXO":
             self.linha += 1
@@ -159,19 +146,22 @@ class Tetromino:
             self.coluna -=1
 
 
-    #responsável por rotacionar os tetrominos
+    #rotaciona o tetramino
     def rotaciona(self):
 
         self.estado += 1
+        #limita o estado do tetramino para apenas para valores menores
+        #que quatro
         self.estado = self.estado % 4
-        auxiliar = [[0 for linha in range(4)] for coluna in range(4)]
 
-        for i in range(4):
-            for j in range(4):
-                auxiliar[i][j]=self.matriz[i][j]
+        auxiliar = copy.deepcopy(self.matriz)
 
         for linha in range(4):
             for coluna in range(4):
+                #a relação entre a posicao dos tijolos do tetramino antes e apos uma rotacao
+                #pode ser descrita por um sistema linear de variaveis que relacionam a antiga
+                #e a nova posicao de cada tijolo
+
                 nova_posicao = -4*coluna + linha + 12
 
                 if nova_posicao < 4:
@@ -190,6 +180,7 @@ class Tetromino:
 
                 self.matriz[linha][coluna] = auxiliar[nova_linha][nova_coluna]
 
+                #apos rotacao, a posicao do eixo de rotacao do tetramino deve ser atualizada
                 self.muda_posicao_eixo()
 
     def muda_posicao_eixo(self):
@@ -210,9 +201,13 @@ class Tetromino:
             self.eixo_linha = 2
             self.eixo_coluna = 3
 
+    #retorna quais sao as posicoes ocupadas pelos tijolos
+    #na matriz do tetramino. Essas posicoes sao definidas
+    #pelo caminho que deve ser feito a partir do tijolo
+    #do eixo de rotacao para se chegar nos outros tijolos
     def pega_posicoes_ocupadas(self):
 
-        posicoes = []
+        caminho = []
 
         linha = self.eixo_linha
         coluna = self.eixo_coluna
@@ -222,13 +217,17 @@ class Tetromino:
             j = 0
             while( j < len(self.matriz[0])):
                 if self.matriz[i][j]:
+                    #os caminhos para o tijolo do eixo tem direcao e sentido. a direcao eh
+                    #horizontal ou vertical. O sentido eh avancando ou retrocedendo
+                    #nos indices de linha ou coluna
                     distancia_linha = i - linha
                     distancia_coluna = j - coluna
-                    posicoes.append((distancia_linha, distancia_coluna))
+
+                    caminho.append((distancia_linha, distancia_coluna))
                 j += 1
             i += 1
 
-        return posicoes
+        return caminho
 
 class Verificador:
 
@@ -237,6 +236,8 @@ class Verificador:
 
     def cabe_tetramino(self,tabuleiro,tetramino,direcao):
 
+        #e o teramino que sera movimentado de acordo com a direcao
+        #input para verificar se hah ou nao colisao
         tetramino_movido = copy.deepcopy(tetramino)
         if direcao == "ROTACAO":
             tetramino_movido.rotaciona()
@@ -250,9 +251,12 @@ class Verificador:
         caminho_tetramino = tetramino_movido.pega_posicoes_ocupadas()
 
         for movimento in caminho_tetramino:
+            #verifica se a nova posicao de algum tijolo apos movimentacao
+            #do tetramino colidira com posicao jah ocupada no tabuleiro
             linha_ocupada = linha_inicio + movimento[0]
             coluna_ocupada = coluna_inicio + movimento[1]
 
+            #impede que o tetramino atravesse as paredes do tabuleiro
             if linha_ocupada >= len(tabuleiro.matriz) - 1:
                 return False
             if coluna_ocupada >= len(tabuleiro.matriz[0]) - 1:
@@ -260,15 +264,15 @@ class Verificador:
             if coluna_ocupada <= 0:
                 return False
 
-        for movimento in caminho_tetramino:
-            linha_ocupada = linha_inicio + movimento[0]
-            coluna_ocupada = coluna_inicio + movimento[1]
+            #impede que o tetramino se movimente para posicao jah ocupada
             if linha_ocupada > -1:
                 if tabuleiro.matriz[linha_ocupada][coluna_ocupada] == 2:
                     return False
 
         return True
 
+
+    #procura por alguma linha completa de tijolos pelo tabuleiro
     def verifica_linhas_completas(self,tabuleiro):
         linha = len(tabuleiro.matriz) - 2
 
@@ -347,22 +351,22 @@ def principal():
         if verificador.cabe_tetramino(tabuleiro, tetramino,"BAIXO"):
             tabuleiro.apaga_tetramino(tetramino)
             tetramino.movimenta("BAIXO")
-            tabuleiro.coloca_tetramino(tetramino)
+            tabuleiro.coloca_tetramino(tetramino,1)
             inicio = agora
         else:
             proximo_tetramino = True
-            tabuleiro.encaixa_tetramino(tetramino)
+            tabuleiro.coloca_tetramino(tetramino,2)
             verificador.verifica_linhas_completas(tabuleiro)
 
 
-    #lógica do jogo
+    #logica do jogo
     if tecla_valida and diferenca_de_tempo>=0.2:
 
         if verificador.cabe_tetramino(tabuleiro,tetramino,direcao):
             tabuleiro.apaga_tetramino(tetramino)
 
             tetramino.movimenta(direcao)
-            tabuleiro.coloca_tetramino(tetramino)
+            tabuleiro.coloca_tetramino(tetramino,1)
 
         tecla_valida = False
 
