@@ -10,6 +10,8 @@ class Verificador:
 
     def cabe_tetramino(self,tabuleiro,tetramino,direcao):
 
+        #e o teramino que sera movimentado de acordo com a direcao
+        #input para verificar se hah ou nao colisao
         tetramino_movido = copy.deepcopy(tetramino)
         if direcao == "ROTACAO":
             tetramino_movido.rotaciona()
@@ -23,9 +25,12 @@ class Verificador:
         caminho_tetramino = tetramino_movido.pega_posicoes_ocupadas()
 
         for movimento in caminho_tetramino:
+            #verifica se a nova posicao de algum tijolo apos movimentacao
+            #do tetramino colidira com posicao jah ocupada no tabuleiro
             linha_ocupada = linha_inicio + movimento[0]
             coluna_ocupada = coluna_inicio + movimento[1]
 
+            #impede que o tetramino atravesse as paredes do tabuleiro
             if linha_ocupada >= len(tabuleiro.matriz) - 1:
                 return False
             if coluna_ocupada >= len(tabuleiro.matriz[0]) - 1:
@@ -33,15 +38,15 @@ class Verificador:
             if coluna_ocupada <= 0:
                 return False
 
-        for movimento in caminho_tetramino:
-            linha_ocupada = linha_inicio + movimento[0]
-            coluna_ocupada = coluna_inicio + movimento[1]
+            #impede que o tetramino se movimente para posicao jah ocupada
             if linha_ocupada > -1:
                 if tabuleiro.matriz[linha_ocupada][coluna_ocupada] == 2:
                     return False
 
         return True
 
+
+    #procura por alguma linha completa de tijolos pelo tabuleiro
     def verifica_linhas_completas(self,tabuleiro):
         linha = len(tabuleiro.matriz) - 2
 
@@ -60,7 +65,6 @@ class Verificador:
             linha -= 1
 
     def fim_de_jogo(self,tabuleiro):
-
         for coluna in range(1,len(tabuleiro.matriz[0]) - 1):
             if tabuleiro.matriz[0][coluna] == 2:
                 return True

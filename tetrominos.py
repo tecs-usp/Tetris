@@ -18,6 +18,7 @@
 
 
 from random import choice
+import copy
 #gera todos os tipos de tetrominós
 class Tetromino:
 
@@ -25,68 +26,59 @@ class Tetromino:
     def __init__(self,tipo):
 
         self.matriz = [[0 for coluna in range(4)] for linha in range(4)]
+
+        #Marcam a referencial principal para localizar um  tetramino na matriz do tabuleiro,
+        #que eh seu eixo de rotacao
+        #No init, essa posicao eh no centro da primeira linha. Sao modificados
+        #pelo metodo move()
         self.linha = 0
         self.coluna = 5
+
+        #atributo que diz qual das 4 posicoes possiveis para cada tetramino
+        #é a atual. Essas posições são definidas para os valores [0,1,2,3],
+        #a cada input UP o valor é incrementado pelo método rotaciona()
+        #voltando para o estado inicial após a 3a rotação.
         self.estado = 0
+
         self.tipo = tipo
+
+        #marcam a posicao em relacao a matriz do tabuleiro que o eixo do tetramino se encontra
+        #no init, essa posicao eh no centro da primeira linha. Sao modificados
+        #pelo metodo
         self.eixo_linha = 3
         self.eixo_coluna = 1
+
         self.cor = choice([(247, 168, 184),(242, 201, 212),(160, 219, 242),(85, 205, 252)])
 
         if tipo == 'A':
-            i=3
-            j=0
-            while(j<4):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [0,0,0,0],
+                           [1,1,1,1]]
 
         elif tipo == 'B':
-            i=2
-            j=0
-
-            self.matriz[i][j]=1
-            i+=1
-
-            while(j<3):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [1,0,0,0],
+                           [1,1,1,0]]
 
         elif tipo == 'C':
-            i=2
-            j=1
-
-            self.matriz[i][j]=1
-            i+=1
-            j=0
-
-            while(j<3):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [0,1,0,0],
+                           [1,1,1,0]]
 
         elif tipo == 'D':
-            i=2
-            j=0
-
-            self.matriz[i][j]=1
-            j+=1
-            self.matriz[i][j]=1
-            i+=1
-
-            while(j<3):
-                self.matriz[i][j]=1
-                j+=1
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [1,1,0,0],
+                           [0,1,1,0]]
 
         elif tipo == 'E':
-                i=2
-                j=0
-
-                while(i<4):
-                    while(j<2):
-                        self.matriz[i][j]=1
-                        j+=1
-
-                    i+=1
-                    j=0
+            self.matriz = [[0,0,0,0],
+                           [0,0,0,0],
+                           [1,1,0,0],
+                           [1,1,0,0]]
 
     def movimenta(self,direcao):
         if direcao != "ROTACAO":
@@ -94,6 +86,7 @@ class Tetromino:
         else:
             self.rotaciona()
 
+    #translada o tetramino pelo tabuleiro
     def move(self,direcao):
         if direcao == "BAIXO":
             self.linha += 1
@@ -103,19 +96,22 @@ class Tetromino:
             self.coluna -=1
 
 
-    #responsável por rotacionar os tetrominos
+    #rotaciona o tetramino
     def rotaciona(self):
 
         self.estado += 1
+        #limita o estado do tetramino para apenas para valores menores
+        #que quatro
         self.estado = self.estado % 4
-        auxiliar = [[0 for linha in range(4)] for coluna in range(4)]
 
-        for i in range(4):
-            for j in range(4):
-                auxiliar[i][j]=self.matriz[i][j]
+        auxiliar = copy.deepcopy(self.matriz)
 
         for linha in range(4):
             for coluna in range(4):
+                #a relação entre a posicao dos tijolos do tetramino antes e apos uma rotacao
+                #pode ser descrita por um sistema linear de variaveis que relacionam a antiga
+                #e a nova posicao de cada tijolo
+
                 nova_posicao = -4*coluna + linha + 12
 
                 if nova_posicao < 4:
@@ -134,6 +130,7 @@ class Tetromino:
 
                 self.matriz[linha][coluna] = auxiliar[nova_linha][nova_coluna]
 
+                #apos rotacao, a posicao do eixo de rotacao do tetramino deve ser atualizada
                 self.muda_posicao_eixo()
 
     def muda_posicao_eixo(self):
@@ -154,9 +151,13 @@ class Tetromino:
             self.eixo_linha = 2
             self.eixo_coluna = 3
 
+    #retorna quais sao as posicoes ocupadas pelos tijolos
+    #na matriz do tetramino. Essas posicoes sao definidas
+    #pelo caminho que deve ser feito a partir do tijolo
+    #do eixo de rotacao para se chegar nos outros tijolos
     def pega_posicoes_ocupadas(self):
 
-        posicoes = []
+        caminho = []
 
         linha = self.eixo_linha
         coluna = self.eixo_coluna
@@ -166,10 +167,14 @@ class Tetromino:
             j = 0
             while( j < len(self.matriz[0])):
                 if self.matriz[i][j]:
+                    #os caminhos para o tijolo do eixo tem direcao e sentido. a direcao eh
+                    #horizontal ou vertical. O sentido eh avancando ou retrocedendo
+                    #nos indices de linha ou coluna
                     distancia_linha = i - linha
                     distancia_coluna = j - coluna
-                    posicoes.append((distancia_linha, distancia_coluna))
+
+                    caminho.append((distancia_linha, distancia_coluna))
                 j += 1
             i += 1
 
-        return posicoes
+        return caminho

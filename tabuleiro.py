@@ -48,31 +48,25 @@ class Tabuleiro:
                 self.matriz[linha + movimento[0]][coluna + movimento[1]] = 0
                 self.matriz_de_cores[linha + movimento[0]][coluna + movimento[1]] = [255,255,255]
 
-    def coloca_tetramino(self,tetramino):
-        posicoes = tetramino.pega_posicoes_ocupadas()
+    def coloca_tetramino(self,tetramino,encaixe):
 
-        linha = tetramino.linha
-        coluna = tetramino.coluna
+        #define as instrucoes para colocar os tijolos no tabuleiro
+        #a partir de suas posicoes em relacao ao referencial eixo de rotacao.
+        #Ja que o eixo de rotacao eh o primeiro tijolo a ser colocado
+        #no tabuleiro apos movimentacao, a posicao de todos os outros
+        #pode ser definida por sua posicao relativa eo eixo referencial
+        caminho = tetramino.pega_posicoes_ocupadas()
 
-        for posicao in posicoes:
-            linha = tetramino.linha
-            coluna = tetramino.coluna
-            linha += posicao[0]
-            coluna +=  posicao[1]
-            if linha > -1:
-                self.matriz[linha][coluna] = 1
-                self.matriz_de_cores[linha][coluna] = tetramino.cor
+        #guarda a posicao a partir de qual os blocos de tijolos serao encaixados
+        #Ex: coloque um tijolo uma linha acima e duas colunas a direita da atual
+        referencial_linha = tetramino.linha
+        referencial_coluna = tetramino.coluna
 
-    def encaixa_tetramino(self,tetramino):
-        posicoes = tetramino.pega_posicoes_ocupadas()
-        linha = tetramino.linha
-        coluna = tetramino.coluna
-
-        for posicao in posicoes:
-            linha = tetramino.linha
-            coluna = tetramino.coluna
-            linha += posicao[0]
-            coluna +=  posicao[1]
-            if linha > -1:
-                self.matriz[linha][coluna] = 2
-                self.matriz_de_cores[linha][coluna] = tetramino.cor
+        for direcao in caminho:
+            referencial_linha = tetramino.linha
+            referencial_coluna = tetramino.coluna
+            referencial_linha += direcao[0]
+            referencial_coluna +=  direcao[1]
+            if referencial_linha > -1:
+                self.matriz[referencial_linha][referencial_coluna] = encaixe
+                self.matriz_de_cores[referencial_linha][referencial_coluna] = tetramino.cor

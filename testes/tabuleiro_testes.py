@@ -121,7 +121,7 @@ def teste_tetraminos_devem_ser_posicionados_corretamente(tipo,tabuleiro_vazio):
         tabuleiro_vazio_auxiliar = copy.deepcopy(tabuleiro_vazio)
         tetramino.rotaciona()
         tabuleiro_esperado = tabuleiro_com_tetramino(tabuleiro_vazio_auxiliar,tetramino)
-        tabuleiro_vazio_auxiliar.coloca_tetramino(tetramino)
+        tabuleiro_vazio_auxiliar.coloca_tetramino(tetramino,1)
         assert tabuleiro_esperado == tabuleiro_vazio_auxiliar
 
 tipos = ['A','B','C','D','E']
@@ -135,7 +135,7 @@ def teste_tetraminos_devem_descer_o_tabuleiro_corretamente(tipo,tabuleiro_vazio)
         while(verificador.cabe_tetramino(tabuleiro_vazio,tetramino,"BAIXO")):
             tetramino.move("BAIXO")
             tabuleiro_esperado = tabuleiro_com_tetramino(tabuleiro_vazio,tetramino)
-            tabuleiro_vazio.coloca_tetramino(tetramino)
+            tabuleiro_vazio.coloca_tetramino(tetramino,1)
             assert tabuleiro_esperado == tabuleiro_vazio
 
             tabuleiro_vazio.apaga_tetramino(tetramino)
