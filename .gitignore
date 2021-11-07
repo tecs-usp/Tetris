@@ -1,3 +1,4 @@
 # byte-compiled / optimized_files 
 __pycache*/
 *.pyc
+*.class
